@@ -62,6 +62,39 @@ def get_all_law_details_as_json(data):
             })
     return json.dumps(results, ensure_ascii=False, indent=2)
 
+def get_all_law_details_as_json1(data):
+    result = {
+        "law": {
+            "lawName": "근로기준법",
+            "lawNo": "제17조",
+            "enforcementDate": "2021-01-05",
+            "promulgationNo": "제17791호",
+            "article": {
+                "articleNo": "제17조",
+                "articleTitle": "근로조건의 명시",
+                "paragraphs": [
+                    {   
+                    "paragraphNo": "①",
+                    "content": "사용자는 근로계약을 체결할 때에 근로자에게 다음 각 호의 사항을 명시하여야 한다. 근로계약 체결 후 다음 각 호의 사항을 변경하는 경우에도 또한 같다.",
+                    "items": [
+                        {"itemNo": "1", "content": "임금"},
+                        {"itemNo": "2", "content": "소정근로시간"},
+                        {"itemNo": "3", "content": "제55조에 따른 휴일"},
+                        {"itemNo": "4", "content": "제60조에 따른 연차 유급휴가"},
+                        {"itemNo": "5", "content": "그 밖에 대통령령으로 정하는 근로조건"}
+                    ]
+                    },
+                    {
+                    "paragraphNo": "②",
+                    "content": "사용자는 제1항제1호와 관련한 임금의 구성항목ㆍ계산방법ㆍ지급방법 및 제2호부터 제4호까지의 사항이 명시된 서면(「전자문서 및 전자거래 기본법」 제2조제1호에 따른 전자문서를 포함한다)을 근로자에게 교부하여야 한다. 다만, 본문에 따른 사항이 단체협약 또는 취업규칙의 변경 등 대통령령으로 정하는 사유로 인하여 변경되는 경우에는 근로자의 요구가 있으면 그 근로자에게 교부하여야 한다."
+                    }
+                ]
+            }
+        }
+    }
+    return result
+
+
 ##########################
 # 다른 파일에서의 사용 예시 #
 ##########################
