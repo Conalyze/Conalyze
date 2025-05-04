@@ -118,7 +118,7 @@ def analyze_contract(contract_text):
         return {"error": "Invalid JSON from GPT", "raw_output": result_text}
 
 
-### --- 전체 흐름을 실행하는 함수 --- ###
+### --- 1차 계약서 분석: csv 파일 참고해서 결과 출력 --- ###
 
 def get_analysis_with_law_matching(contract_file_path, csv_folder_path):
     # 1. 계약서 불러오기
@@ -158,25 +158,36 @@ def get_final_contract_analysis(result, result2):
     prompt = f"""
     다음은 GPT가 근로계약서를 1차 분석한 결과(result)와 관련 법령의 상세 조문 내용(result2)입니다. 이 두 데이터를 바탕으로 계약서에 대한 보다 정밀한 분석을 다시 수행해 주세요.
 
-    - 각 위반사항이 어떤 조문과 어떻게 연결되는지 명확히 밝혀 주세요.
-    - 법령 조항에 기반한 해석을 추가해 주세요.
-    - 불확실하거나 해석의 여지가 있는 항목은 별도로 표시해 주세요.
-    - 기존 요약에서 놓친 내용이 있다면 추가해 주세요.
-    - 조문과 실제 계약 내용이 모순되거나 애매한 경우, 그 이유를 설명해 주세요.
+    1. **계약서 필수 기재사항 누락 여부 확인**
+    2. **대한민국 근로기준법 및 관련 법령과의 관련성 및 위반 여부 판단**
+    3. **위반이 있다면 구체적인 위반 내용과 해당 법령 조항 명시**
+    4. **각 위반사항이 어떤 조문과 어떻게 연결되는지 명확히 밝혀 주세요.**
+    5. **계약서 내용과 관련 있는 모든 법령 조항 명시 (위반 여부와 상관 없이)** 
+    6. **임금 구조의 적절성 판단**
+    7. **사회보험 적용 여부의 적절성**
+    8. **불확실하거나 해석의 여지가 있는 항목은 별도로 표시해 주세요.**
+    9. **기타 유의사항 및 계약서에서 잘못 해석될 수 있는 부분 설명**
+    10. **근로자에게 불리하게 작용할 수 있는 조항이 있는 경우 설명**
+    11. **총평 및 권고사항**
 
     출력 형식은 아래 JSON만 사용하세요. 다른 텍스트는 포함하지 마세요.
-
-    ```json
-    {{
-        "보강된분석": ["내용1", "내용2", ...],
-        "위반사항및법적해석": ["내용1", "내용2", ...],
-        "추가로의견": ["내용1", "내용2", ...],
-        "총평": "전체 평가 및 권고사항"
-    }}
     다음은 원래 분석 결과(result)입니다: {json.dumps(result, ensure_ascii=False, indent=2)}
     다음은 각 관련 조항의 상세 내용(result2)입니다: {result2}
+    ```json
+    {{
+      "관련법조항": ["근로기준법 제00조", "최저임금법 제0조", ...],
+      "법령내용": ["조항 내용1", "조항 내용2", ...],
+      "위반여부": "예" 또는 "아니오",
+      "위반사항및법적해석": ["내용1", "내용2", ...],
+      "상세분석": ["내용1", "내용2", ...],
+      "필수사항누락": ["항목1", "항목2", ...],
+      "임금구조평가": "간단 요약 또는 문제점",
+      "사회보험평가": "간단 요약 또는 문제점",
+      "기타유의사항": ["설명1", "설명2", ...],
+      "총평": "전반적인 평가와 권고사항"
+    }}
     """
-    
+
     try:
         response = openai.ChatCompletion.create(
         model="gpt-4o",
@@ -184,7 +195,7 @@ def get_final_contract_analysis(result, result2):
         {"role": "system", "content": "당신은 대한민국 노동법에 정통한 계약서 분석 전문가입니다."},
         {"role": "user", "content": prompt}
     ],
-    temperature=0.2,
+    temperature=0,
     max_tokens=2000
     )
         result_text = response["choices"][0]["message"]["content"]
@@ -200,6 +211,25 @@ def get_final_contract_analysis(result, result2):
     except Exception as e:
         return {"error": str(e)}
 
+### --- 2차 계약서 분석: CSV 파일 참고된 결과 + 법령api를 사용해서 얻은 결과 --- ###
+def get_openai_response(result1, result2, csv_folder_path):
+    # 2. GPT 분석 실행
+    gpt_result = get_final_contract_analysis(result1, result2)
+
+    # 3. GPT가 추정한 법령조항 리스트
+    gpt_laws = gpt_result.get("관련법조항", [])
+
+    # 4. CSV 각각 로드
+    law_content_csv = load_csv_data_by_name("고용노동부_고용노동관련 법령 내용_20250227.csv", csv_folder_path)
+    law_meta_csv = load_csv_data_by_name("고용노동부_고용노동관련 법령_20250227.csv", csv_folder_path)
+
+    # 5. GPT 결과를 CSV 기준으로 보정
+    matched_laws = match_laws_with_csv(gpt_laws, law_content_csv, law_meta_csv)
+
+    # 6. 결과 JSON에 반영
+    gpt_result["관련법조항"] = matched_laws
+
+    return gpt_result
 
 
 
