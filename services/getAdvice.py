@@ -71,13 +71,14 @@ def analyze_contract(contract_text):
     이 계약서 내용을 아래 항목에 따라 분석해 주세요:
 
     1. **계약서 필수 기재사항 누락 여부 확인**
-    2. **대한민국 근로기준법 및 관련 법령 위반 여부 판단**
+    2. **대한민국 근로기준법 및 관련 법령과의 관련성 및 위반 여부 판단**
     3. **위반이 있다면 구체적인 위반 내용과 해당 법령 조항 명시**
-    4. **임금 구조의 적절성 판단**
-    5. **사회보험 적용 여부의 적절성**
-    6. **기타 유의사항 및 계약서에서 잘못 해석될 수 있는 부분 설명**
-    7. **근로자에게 불리하게 작용할 수 있는 조항이 있는 경우 설명**
-    8. **총평 및 권고사항**
+    4. **계약서 내용과 관련 있는 모든 법령 조항 명시 (위반 여부와 상관 없이)** 
+    5. **임금 구조의 적절성 판단**
+    6. **사회보험 적용 여부의 적절성**
+    7. **기타 유의사항 및 계약서에서 잘못 해석될 수 있는 부분 설명**
+    8. **근로자에게 불리하게 작용할 수 있는 조항이 있는 경우 설명**
+    9. **총평 및 권고사항**
 
     출력 형식은 아래 JSON만 사용하세요. 다른 텍스트는 포함하지 마세요.
 
@@ -141,6 +142,65 @@ def get_analysis_with_law_matching(contract_file_path, csv_folder_path):
     gpt_result["관련법조항"] = matched_laws
 
     return gpt_result
+
+def get_final_contract_analysis(result, result2):
+    """
+    계약서 분석 결과(result)와 관련 법령 상세 내용(result2)을 바탕으로
+    GPT에게 보강된 분석을 요청하는 함수
+
+    Args:
+        result (dict): GPT의 1차 분석 결과 (JSON 디코딩된 딕셔너리)
+        result2 (str): 관련 법령 상세 내용 (JSON 형식의 문자열)
+
+    Returns:
+        dict: 보강된 분석 결과 JSON 또는 오류 메시지
+    """
+    prompt = f"""
+    다음은 GPT가 근로계약서를 1차 분석한 결과(result)와 관련 법령의 상세 조문 내용(result2)입니다. 이 두 데이터를 바탕으로 계약서에 대한 보다 정밀한 분석을 다시 수행해 주세요.
+
+    - 각 위반사항이 어떤 조문과 어떻게 연결되는지 명확히 밝혀 주세요.
+    - 법령 조항에 기반한 해석을 추가해 주세요.
+    - 불확실하거나 해석의 여지가 있는 항목은 별도로 표시해 주세요.
+    - 기존 요약에서 놓친 내용이 있다면 추가해 주세요.
+    - 조문과 실제 계약 내용이 모순되거나 애매한 경우, 그 이유를 설명해 주세요.
+
+    출력 형식은 아래 JSON만 사용하세요. 다른 텍스트는 포함하지 마세요.
+
+    ```json
+    {{
+        "보강된분석": ["내용1", "내용2", ...],
+        "위반사항및법적해석": ["내용1", "내용2", ...],
+        "추가로의견": ["내용1", "내용2", ...],
+        "총평": "전체 평가 및 권고사항"
+    }}
+    다음은 원래 분석 결과(result)입니다: {json.dumps(result, ensure_ascii=False, indent=2)}
+    다음은 각 관련 조항의 상세 내용(result2)입니다: {result2}
+    """
+    
+    try:
+        response = openai.ChatCompletion.create(
+        model="gpt-4o",
+        messages=[
+        {"role": "system", "content": "당신은 대한민국 노동법에 정통한 계약서 분석 전문가입니다."},
+        {"role": "user", "content": prompt}
+    ],
+    temperature=0.2,
+    max_tokens=2000
+    )
+        result_text = response["choices"][0]["message"]["content"]
+
+        # JSON 부분만 추출
+        if result_text.startswith("```json"):
+            result_text = re.sub(r"```json\s*|\s*```", "", result_text, flags=re.DOTALL).strip()
+
+            return json.loads(result_text)
+
+    except json.JSONDecodeError:
+        return {"error": "GPT 응답이 JSON 형식이 아닙니다.", "raw_output": result_text}
+    except Exception as e:
+        return {"error": str(e)}
+
+
 
 
 ##########################
