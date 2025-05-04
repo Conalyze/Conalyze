@@ -160,7 +160,7 @@ def get_final_contract_analysis(result, result2):
 
     법령 조항별로 다음 항목을 묶어서 제시해 주세요:
     - "법령명"
-    - "조항"
+    - "관련법조항"
     - "공포번호"
     - "시행일자"
     - "조문내용": "근로기준법 제17조: ... 와 같은 형식으로 요약"
@@ -210,7 +210,7 @@ def get_final_contract_analysis(result, result2):
         {"role": "user", "content": prompt}
     ],
     temperature=0,
-    max_tokens=2000
+    max_tokens=3000
     )
         result_text = response["choices"][0]["message"]["content"]
 
@@ -241,7 +241,10 @@ def get_openai_response(result1, result2, csv_folder_path):
     matched_laws = match_laws_with_csv(gpt_laws, law_content_csv, law_meta_csv)
 
     # 6. 결과 JSON에 반영
-    gpt_result["관련법조항"] = matched_laws
+    if matched_laws:
+        gpt_result["관련법조항"] = matched_laws
+    else:
+        gpt_result.pop("관련법조항", None)  # 아예 키 제거
 
     return gpt_result
 
