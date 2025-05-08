@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from routers import upload
 from routers.ocr_router import router as ocr_router
-from routers import contract_router
+
 
 app = FastAPI(
     title="Conalyze",
@@ -13,4 +13,4 @@ app = FastAPI(
 
 app.include_router(upload.router)
 app.include_router(ocr_router)
-app.include_router(contract_router.router)
+
