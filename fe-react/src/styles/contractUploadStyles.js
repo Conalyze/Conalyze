@@ -34,8 +34,8 @@ const styles = {
         background: "#e0f2fe",
         border: "2px solid #38bdf8",
         boxShadow: "inset 0 0 10px rgba(56, 189, 248, 0.3)",
-        width: 400, // 유지
-        height: 200, // 유지
+        width: 400,
+        height: 200,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
