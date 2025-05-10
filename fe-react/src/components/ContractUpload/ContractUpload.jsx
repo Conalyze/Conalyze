@@ -4,6 +4,8 @@ import LoadingOverlay from "../LoadingOverlay";
 
 export default function ContractUpload() {
     const fileInputRef = useRef(null);
+    const dropZoneRef = useRef(null);
+
     const [selectedFile, setSelectedFile] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isDragOver, setIsDragOver] = useState(false);
@@ -14,6 +16,16 @@ export default function ContractUpload() {
             setSelectedFile(file);
             console.log("Selected file:", file.name);
         }
+    };
+
+    const isInsideDropZone = (e) => {
+        const box = dropZoneRef.current.getBoundingClientRect();
+        return (
+            e.clientX >= box.left &&
+            e.clientX <= box.right &&
+            e.clientY >= box.top &&
+            e.clientY <= box.bottom
+        );
     };
 
     const handleUploadClick = () => {
@@ -52,20 +64,19 @@ export default function ContractUpload() {
                 <h1 style={styles.title}>근로계약서 업로드</h1>
 
                 <div
+                    ref={dropZoneRef}
                     style={isDragOver ? styles.uploadBoxDragOver : styles.uploadBox}
                     onClick={handleUploadClick}
-                    onDragEnter={(e) => {
-                        if (e.target === e.currentTarget) setIsDragOver(true);
-                    }}
+                    onDragEnter={() => setIsDragOver(true)}
+                    onDragOver={(e) => e.preventDefault()}
                     onDragLeave={(e) => {
-                        if (e.target === e.currentTarget) setIsDragOver(false);
+                        if (!isInsideDropZone(e)) setIsDragOver(false);
                     }}
                     onDrop={(e) => {
                         e.preventDefault();
                         setIsDragOver(false);
                         handleFileChange(e);
                     }}
-                    onDragOver={(e) => e.preventDefault()}
                 >
                     {isDragOver ? (
                         <>
@@ -80,6 +91,7 @@ export default function ContractUpload() {
                     ) : (
                         <p style={styles.uploadText}>PDF 또는 이미지 파일을 업로드하세요</p>
                     )}
+
                     <input
                         type="file"
                         accept=".pdf,image/png,image/jpeg,image/jpg"
