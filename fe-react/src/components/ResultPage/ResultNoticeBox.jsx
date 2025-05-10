@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function NoticeBox({ notices }) {
+export default function ResultNoticeBox({ notices }) {
     const boxStyle = {
         backgroundColor: "#fef9c3",
         border: "1px solid #facc15",
@@ -23,12 +23,15 @@ export default function NoticeBox({ notices }) {
     };
 
     return (
-        <div style={boxStyle}>
-            <ul style={listStyle}>
-                {notices.map((notice, idx) => (
-                    <li key={idx} style={itemStyle}>💡 {notice}</li>
-                ))}
-            </ul>
-        </div>
+        <section>
+            <h2 style={{ fontSize: 20, marginBottom: 20, fontWeight: 600 }}>기타 유의사항</h2>
+            <div style={boxStyle}>
+                <ul style={listStyle}>
+                    {notices.map((notice, idx) => (
+                        <li key={idx} style={itemStyle}>💡 {notice}</li>
+                    ))}
+                </ul>
+            </div>
+        </section>
     );
 }
