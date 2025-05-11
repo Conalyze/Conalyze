@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from .routers import upload
-from .routers.ocr_router import router as ocr_router
+from routers import upload
+from routers.ocr_router import router as ocr_router
 
 
 app = FastAPI(
@@ -10,7 +10,6 @@ app = FastAPI(
     ),
     version="1.0.0"
 )
-
 app.include_router(upload.router)
 app.include_router(ocr_router)
 

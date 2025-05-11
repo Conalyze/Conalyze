@@ -82,7 +82,8 @@ def analyze_contract(contract_text):
 
     출력 형식은 아래 JSON만 사용하세요. 다른 텍스트는 포함하지 마세요.
 
-    ```json
+
+json
     {{
       "필수사항누락": ["항목1", "항목2", ...],
       "위반여부": "예" 또는 "아니오",
@@ -114,6 +115,7 @@ def analyze_contract(contract_text):
             result_text = re.sub(r"```json\s*|\s*```", "", result_text, flags=re.DOTALL).strip()
 
         return json.loads(result_text)
+
     except json.JSONDecodeError:
         return {"error": "Invalid JSON from GPT", "raw_output": result_text}
 
@@ -180,7 +182,8 @@ def get_final_contract_analysis(result, result2):
     다음은 원래 분석 결과(result)입니다: {json.dumps(result, ensure_ascii=False, indent=2)}
     다음은 각 관련 조항의 상세 내용(result2)입니다: {result2}
 
-    ```json
+
+json
     {{
         "법령분석": [
         {{
@@ -219,7 +222,7 @@ def get_final_contract_analysis(result, result2):
         if result_text.startswith("```json"):
             result_text = re.sub(r"```json\s*|\s*```", "", result_text, flags=re.DOTALL).strip()
 
-            return json.loads(result_text)
+        return json.loads(result_text)
 
     except json.JSONDecodeError:
         return {"error": "GPT 응답이 JSON 형식이 아닙니다.", "raw_output": result_text}
@@ -250,6 +253,7 @@ def get_openai_response(result1, result2, csv_folder_path):
 
     return format_for_frontend(gpt_result)
 
+
 # 시행일자 제거 후처리 함수
 def format_for_frontend(gpt_result):
     def to_bool(value):
@@ -278,6 +282,7 @@ def format_for_frontend(gpt_result):
 
     return formatted_result
 
+
 ##########################
 # 다른 파일에서의 사용 예시 #
 ##########################
@@ -299,3 +304,6 @@ result = get_analysis_with_law_matching(
 
 pprint.pprint(result)
 '''
+
+
+
