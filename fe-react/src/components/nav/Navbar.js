@@ -8,20 +8,22 @@ export default function Navbar() {
             <ul style={styles.menu}>
                 <li><Link to="/" style={styles.link}>홈</Link></li>
                 <li><Link to="/upload" style={styles.link}>계약서 업로드</Link></li>
-                <li><Link to="/result" style={styles.link}>분석 결과</Link></li>
             </ul>
         </nav>
     );
 }
-
 const styles = {
     navbar: {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
         padding: "16px 32px",
-        backgroundColor: "#0057b7",
+        backgroundColor: "#38bdf8", // sky-400
         color: "white",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.06)",
+        position: "sticky",
+        top: 0,
+        zIndex: 999,
     },
     logo: {
         fontSize: "20px",
@@ -38,5 +40,6 @@ const styles = {
         color: "white",
         textDecoration: "none",
         fontSize: "16px",
+        fontWeight: 500,
     },
 };
