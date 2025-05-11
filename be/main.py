@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from routers import upload
-from routers.ocr_router import router as ocr_router
+from .routers import upload
+from .routers.ocr_router import router as ocr_router
 
 
 app = FastAPI(

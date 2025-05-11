@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, File
 import os
-from services.ocr_service import naver_ocr
+from ..services.ocr_service import naver_ocr
 
 router = APIRouter()
 

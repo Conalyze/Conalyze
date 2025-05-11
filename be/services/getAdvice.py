@@ -259,7 +259,7 @@ def format_for_frontend(gpt_result):
     for item in gpt_result.get("법령분석", []):
         law_list.append({
             "law_title": item.get("법령명"),
-            "article": f"제{item.get('조항')}",
+            "article": f"제{item.get('조항') or '미확인'}",
             "proclamation_no": item.get("공포번호"),
             "violation": to_bool(item.get("위반여부", "아니오")),
             "law_summary": item.get("조문내용", "").strip(),
@@ -299,4 +299,3 @@ result = get_analysis_with_law_matching(
 
 pprint.pprint(result)
 '''
-
