@@ -2,8 +2,6 @@ import requests
 import xml.etree.ElementTree as ET
 import json
 
-API_KEY = 'YOUR_API_KEY_HERE'
-
 
 # 법령명에 따른 ID 찾아주는 함수
 def search_law_id(law_name):
