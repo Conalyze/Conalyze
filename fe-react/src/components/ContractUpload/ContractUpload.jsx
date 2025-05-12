@@ -66,6 +66,7 @@ export default function ContractUpload() {
         } catch (err) {
             console.error("🚨 에러 발생:", err);
         } finally {
+            alert("서버 오류로 업로드에 실패했습니다.");
             setIsLoading(false);
         }
     };
