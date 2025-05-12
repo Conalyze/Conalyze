@@ -5,11 +5,14 @@ import ResultLawList from "./ResultLawList";
 import ResultNoticeBox from "./ResultNoticeBox";
 
 export default function AnalysisResultPage({ data }) {
-    const { 총평, 법령분석, 기타유의사항, 위반여부 } = data;
+    const { 총평, 법령분석 = [], 기타유의사항 = [] } = data;
+
+    // ✅ 법령분석 항목 중 하나라도 위반여부가 "예"이면 전체 위반
+    const isViolated = 법령분석.some((law) => law.위반여부 === "예");
 
     return (
         <div style={styles.container}>
-            <ResultSummary isViolated={위반여부 === "예"} />
+            <ResultSummary isViolated={isViolated} />
 
             <ResultTotal summary={총평} />
 
@@ -17,7 +20,7 @@ export default function AnalysisResultPage({ data }) {
 
             <ResultLawList laws={법령분석} />
 
-            {기타유의사항?.length > 0 && (
+            {기타유의사항.length > 0 && (
                 <>
                     <hr style={styles.divider} />
                     <ResultNoticeBox notices={기타유의사항} />

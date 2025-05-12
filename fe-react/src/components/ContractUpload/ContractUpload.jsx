@@ -42,7 +42,7 @@ export default function ContractUpload() {
         formData.append("file", selectedFile);
 
         try {
-            const res = await fetch("http://localhost:4000/upload", {
+            const res = await fetch("http://211.188.59.152:8000/ocr/file", {
                 method: "POST",
                 body: formData,
             });
@@ -51,11 +51,18 @@ export default function ContractUpload() {
                 const data = await res.json();
                 console.log("✅ 분석 결과 수신:", data);
 
-                // ✅ 결과 페이지로 이동 + 데이터 전달
-                navigate("/result", { state: data });
+                if (data.success) {
+                    // ✅ 결과 페이지로 이동 + 데이터 전달
+                    navigate("/result", { state: data.ai_result });
+                } else {
+                    // ❌ 분석 실패 → 경고창 띄우기
+                    alert("❌ 분석에 실패했습니다: " + (data.error || "알 수 없는 오류"));
+                }
             } else {
                 console.error("❌ 업로드 실패");
+                alert("서버 오류로 업로드에 실패했습니다.");
             }
+
         } catch (err) {
             console.error("🚨 에러 발생:", err);
         } finally {
