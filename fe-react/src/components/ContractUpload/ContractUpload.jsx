@@ -53,7 +53,7 @@ export default function ContractUpload() {
 
                 if (data.success) {
                     // ✅ 결과 페이지로 이동 + 데이터 전달
-                    navigate("/result", { state: data });
+                    navigate("/result", { state: data.ai_result });
                 } else {
                     // ❌ 분석 실패 → 경고창 띄우기
                     alert("❌ 분석에 실패했습니다: " + (data.error || "알 수 없는 오류"));

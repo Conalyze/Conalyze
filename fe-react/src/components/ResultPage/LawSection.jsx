@@ -32,7 +32,7 @@ export default function LawSection({ law }) {
     return (
         <div style={boxStyle} onClick={() => setOpen(!open)}>
             <div style={headerStyle}>
-                <span>{law.법령명} {law.조항}</span>
+                <span>{law.법령명} {law.관련법조항}</span>
                 <span>{open ? "▲" : "▼"}</span>
             </div>
             <div style={detailStyle}>
@@ -43,3 +43,4 @@ export default function LawSection({ law }) {
         </div>
     );
 }
+
