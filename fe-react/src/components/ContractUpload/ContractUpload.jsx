@@ -42,7 +42,7 @@ export default function ContractUpload() {
         formData.append("file", selectedFile);
 
         try {
-            const res = await fetch("http://localhost:4000/upload", {
+            const res = await fetch("http://211.188.59.152:8000/ocr/file", {
                 method: "POST",
                 body: formData,
             });
