@@ -1,0 +1,140 @@
+/* 페이지 배경과 글자색 설정 */
+body {
+    background-color: #f5fafe;
+    color: #1f2937;
+}
+
+/* 전체 컨테이너 */
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
+
+/* 히어로 영역 */
+.hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 60px auto;
+}
+
+h1 {
+    font-size: 32px;
+    margin-bottom: 16px;
+}
+
+.subtitle {
+    font-size: 16px;
+    color: #4b5563;
+    margin-bottom: 32px;
+}
+
+/* CTA 버튼 */
+.cta-button {
+    background-color: #38bdf8;
+    color: white;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+    display: inline-block;
+}
+
+.cta-button:hover {
+    background-color: #0ea5e9;
+}
+
+/* 기능 카드 영역 */
+.card-section {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin: 80px 0;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    width: 260px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+}
+
+.card h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.card p {
+    font-size: 14px;
+    color: #4b5563;
+}
+
+/* 섹션 기본 마진 */
+.section {
+    margin: 80px 0;
+    padding: 0 12px;
+}
+
+.section h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.section p {
+    font-size: 15px;
+    color: #4b5563;
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+/* 텍스트 + 이미지 나란히 배치 */
+.flex-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 100px;
+    flex-wrap: wrap;
+    text-align: left;
+}
+
+.flex-row.reverse {
+    flex-direction: row-reverse;
+}
+
+
+/* 이미지 정렬 보정 */
+.flex-row img {
+    display: block;
+    max-width: 420px;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* 신뢰 문구 */
+.trust {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 60px 0;
+    text-align: center;
+}
+
+/* 하단 CTA */
+.final-cta {
+    margin: 60px 0;
+    text-align: center;
+}
